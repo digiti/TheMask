@@ -6,6 +6,25 @@
     <link rel="stylesheet" href="./assets/main.css" />
     <style>
       /* begin demo embedded styles */
+      h1, p {
+        text-align: center;
+      }
+
+      #iphone {
+        margin: 0 auto 0 auto;
+        width: 500px; height: 500px;
+
+        background: #E1E1E1;
+      }
+
+      .rel-center {
+        position: relative;
+        top: 50%; left: 50%;
+
+        -webkit-transform: translateX(-50%) translatey(-50%);
+        -ms-transform: translateX(-50%) translatey(-50%);
+        transform: translateX(-50%) translatey(-50%);
+      }
 
       /* end demo embedded styles */
     </style>
@@ -15,19 +34,36 @@
 
     <!-- begin demo markup -->
 
+    <div id="iphone">
+      <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+      <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
+      <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
+      <div  class="alternative rel-center">
+        <p>Sorry, your browser does not support 'The Mask.'</p>
+      </div>
+    </div>
+
     <!-- end demo markup -->
 
     <p>See the <a href="http://wautersj.github.io/TheMask">project homepage</a>.
     <p>Check out the <a href="https://github.com/wautersj/TheMask">project repo</a>.
     <p>Copyright 2015 Joeri Wauters</p>
 
+
+    <!-- dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- the script -->
     <script src="./../dist/TheMask.js"></script>
 
     <script>
       /* begin demo script */
 
-      var n = TheMask();
-      console.log(n);
+      var maskIphone = new TheMask({
+        target: '#iphone',
+        duration: 500
+      });
 
       /* end demo script */
     </script>

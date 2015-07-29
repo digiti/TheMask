@@ -12,6 +12,11 @@ module.exports = function(grunt) {
         src: [
           'src/_intro.js',
           'src/main.js',
+          'src/processOptions.js',
+          'src/validator.js',
+          'src/analyzer.js',
+          'src/getters-setters.js',
+          'src/console.js',
           'src/_outro.js'
         ],
         dest: 'dist/<%= pkg.name.replace(".js", "") %>.js'
@@ -59,6 +64,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('default', ['concat', 'jshint', 'qunit', 'uglify']);
+  grunt.registerTask('default', ['concat', 'qunit', 'uglify']);
+  // grunt.registerTask('default', ['concat', 'jshint', 'qunit', 'uglify']);
 
 };
