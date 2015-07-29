@@ -6,7 +6,7 @@ HTML5 SVG masking tool.
 
 A JavaScript library by Joeri Wauters.
 
-See the [project homepage](http://wautersj.github.io/TheMask).
+See the [project homepage](http://digiti.github.io/TheMask/).
 
 ## Installation
 
