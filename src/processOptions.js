@@ -15,16 +15,24 @@ TheMask.prototype.processOptions = function(opt) {
   //Cahce the options
   this.data.opt = opt;
 
+  //Define required options
   this.requiredOptions = [
     'target',
   ]
 
+  //Define default options
   this.defaultOptions = {
     'duration': 1000,
     'easing': 'easeInOutQuart'
   }
 
-   // // // // // // // //
+  //Setup data object
+  this.data.image = null;
+  this.data.masks = null;
+  this.data.alternative = null;
+  this.data.targetID = null;
+
+  // // // // // // // //
 
   var optionsApproved = true;
 

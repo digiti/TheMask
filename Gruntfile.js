@@ -15,9 +15,13 @@ module.exports = function(grunt) {
           'src/processOptions.js',
           'src/validator.js',
           'src/analyzer.js',
+          'src/build.js',
+          'src/shapeMask.js',
           'src/getters-setters.js',
+          'src/helpers.js',
           'src/console.js',
           'src/_outro.js'
+
         ],
         dest: 'dist/<%= pkg.name.replace(".js", "") %>.js'
       }

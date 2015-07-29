@@ -4,11 +4,10 @@
 var TheMask = function(opt) {
   var optionsProcessed = this.processOptions(opt);
   var validated = this.validator();
+  var analyzed = this.analyzer();
+  var build = this.build();
 
-
-
-  console.log(optionsProcessed);
-  console.log(validated);
+  this.info("build : " + build);
 };
 
 

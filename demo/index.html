@@ -10,11 +10,81 @@
         text-align: center;
       }
 
-      #iphone {
-        margin: 0 auto 0 auto;
+      h1 {
+        margin: 1.2em 0;
+      }
+
+      #container {
+        position: relative;
         width: 500px; height: 500px;
 
-        background: #E1E1E1;
+        margin: 0 auto 0 auto;
+        overflow: hidden;
+
+        cursor: pointer;
+
+        -webkit-transition: width 0.5s;
+        transition: width 0.5s;
+      }
+
+      #container.open {
+        width: 100%;
+        /*height: 600px;*/
+
+        /*background: url('img/skyline.jpg') center center;*/
+        /*background: black;*/
+      }
+
+      #iphone {
+        position: absolute;
+        top: 50%; left: 50%;
+
+        width: 500px; height: 500px;
+
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+
+        -webkit-transition: width 0.75s, height 0.75s;
+        transition: width 0.75s, height 0.75s;
+      }
+
+      #container.open #iphone {
+        width: 400px; height: 400px;
+      }
+
+      #skyline {
+        width: 100%;
+        height: 100%;
+      }
+
+      #skyline svg {
+        height: 100%;
+
+        position: relative;
+        left: 50%;
+
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+
+      #container .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        background: transparent;
+
+        -webkit-transition: background 0.3s;
+        transition: background 0.3s;
+      }
+
+      #container.open .background {
+        background: #1e1f23;
+
+        -webkit-transition: background 1.5s;
+        transition: background 1.5s;
       }
 
       .rel-center {
@@ -26,6 +96,10 @@
         transform: translateX(-50%) translatey(-50%);
       }
 
+      .alternative {
+        display: none;
+      }
+
       /* end demo embedded styles */
     </style>
   </head>
@@ -34,20 +108,32 @@
 
     <!-- begin demo markup -->
 
-    <div id="iphone">
-      <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
-      <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
-      <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
-      <div  class="alternative rel-center">
-        <p>Sorry, your browser does not support 'The Mask.'</p>
+    <div id="container">
+      <div class="background"></div>
+
+      <div id="skyline">
+        <span class="image" data-dimensions="1920,500" data-src="img/skyline.jpg"></span>
+        <span class="mask" data-coords="1020,20 1188,282 1043,446 730,345" data-mask-id="closedMask"></span>
+        <span class="mask" data-coords="0,0 1920,0 1920,500 0,500" data-mask-id="openMask"></span>
+        <div  class="alternative">
+          <p>Sorry, your browser does not support 'The Mask.'</p>
+        </div>
+      </div>
+
+      <div id="iphone">
+        <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+        <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
+        <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
+        <div  class="alternative rel-center">
+          <p>Sorry, your browser does not support 'The Mask.'</p>
+        </div>
       </div>
     </div>
 
     <!-- end demo markup -->
 
-    <p>See the <a href="http://wautersj.github.io/TheMask">project homepage</a>.
-    <p>Check out the <a href="https://github.com/wautersj/TheMask">project repo</a>.
-    <p>Copyright 2015 Joeri Wauters</p>
+    <p>Check out the <a href="https://github.com/digiti/TheMask">project repo</a>.
+    <p>Copyright 2015 Digiti</p>
 
 
     <!-- dependencies -->
@@ -60,9 +146,34 @@
     <script>
       /* begin demo script */
 
+      var maskSkyline = new TheMask({
+        target: '#skyline',
+        duration: 500
+      });
+
       var maskIphone = new TheMask({
         target: '#iphone',
         duration: 500
+      });
+
+      $('#container').on('click', function(event) {
+        event.preventDefault();
+
+        var cm = maskSkyline.get('currentMask');
+
+        if(cm) {
+          if(cm.id=="closedMask"){
+            maskSkyline.shapeMask('openMask');
+            maskIphone.shapeMask('openMask');
+
+            $(this).addClass('open');
+          } else if(cm.id=="openMask"){
+            maskSkyline.shapeMask('closedMask');
+            maskIphone.shapeMask('closedMask');
+
+            $(this).removeClass('open');
+          }
+        }
       });
 
       /* end demo script */

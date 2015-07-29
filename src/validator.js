@@ -8,6 +8,8 @@ TheMask.prototype.validator = function() {
     validated = false;
   } else {
     this.$el = $(this.target);
+    this.set('targetID', this.target.substring(1));
+    delete this.target;
   }
 
   return validated;
