@@ -2,11 +2,7 @@
 
 This library makes it easy to add cross-browser animatable masks to images and shapes.
 
-<!-- ## About
-
-A JavaScript library by Joeri Wauters.
-
-See the [project homepage](http://digiti.github.io/TheMask/). -->
+![TheMask.js at Digiti.be](http://client.digiti.be/digiti-website/github/themask-cover.png "TheMask.js at Digiti.be")
 
 ## Installation
 
@@ -16,10 +12,7 @@ Using Bower:
 
 Or grab the [source](https://github.com/wautersj/TheMask/dist/TheMask.js) ([minified](https://github.com/wautersj/TheMask/dist/TheMask.min.js)).
 
-## Copyrights
+## Copyrights & License
 
 DIGITI - 2015
-
-## License
-
 MIT. See `LICENSE.txt` in this directory.
