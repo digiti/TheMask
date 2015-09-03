@@ -12,7 +12,7 @@ Using Bower:
 
 Or grab the [source](https://github.com/wautersj/TheMask/dist/TheMask.js) ([minified](https://github.com/wautersj/TheMask/dist/TheMask.min.js)).
 
-## Step 1: Create a TheMask object with markup input
+## Step 1: Setup your markup
 ```html
   <div id="iphone">
     <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
@@ -22,12 +22,24 @@ Or grab the [source](https://github.com/wautersj/TheMask/dist/TheMask.js) ([mini
   </div>
 ```
 
-## Step 2: Add the coords-string for your mask to the markup
+## Step 2: Add first coordinates string
 ```html
-  ...
-  <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
-  <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="myFirstMask"></span>
-  ...
+  <div id="iphone">
+    <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+    <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="myFirstMask"></span>
+    ...
+  </div>
+```
+
+## Step 3: Add more coordinates ...
+```html
+  <div id="iphone">
+    <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+    <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="myFirstMask"></span>
+    <span class="mask" data-coords="38,0 998,0 958,604 586,894 38,750" data-mask-id="mySecondMask"></span>
+    <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="myThirdMask"></span>
+    ...
+  </div>
 ```
 
 
