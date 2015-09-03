@@ -1,12 +1,12 @@
 # TheMask
 
-HTML5 SVG masking tool.
+This library makes it easy to add cross-browser animatable masks to images and shapes.
 
-## About
+<!-- ## About
 
 A JavaScript library by Joeri Wauters.
 
-See the [project homepage](http://digiti.github.io/TheMask/).
+See the [project homepage](http://digiti.github.io/TheMask/). -->
 
 ## Installation
 

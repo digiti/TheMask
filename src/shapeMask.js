@@ -1,10 +1,26 @@
 /* build.js */
 
-TheMask.prototype.shapeMask = function(maskID) {
+TheMask.prototype.shapeMask = function(opt) {
   var scope = this;
+
+  if(!opt) {
+    return;
+  }
+
+  var maskID = opt.id;
+  var duration = opt.duration || this.duration;
 
   var currentMask = this.get('currentMask');
   var toMask = this.findMask(maskID);
+
+  if(currentMask.id==toMask.id) {
+    // console.log('anime ignored, allready on mask-id: ' + currentMask.id);
+    return false;
+  }
+
+  // Solve issue when starting in the middle of an other animation.
+  scope.set('currentMask', undefined);
+  currentMask = this.get('currentMask');
 
   if(!toMask){
     return false;
@@ -47,8 +63,16 @@ TheMask.prototype.shapeMask = function(maskID) {
     $polygon.attr('points', newPointsString);
   }
 
-  $({perc:0}).animate({perc: 1}, {
-    duration: scope.duration,
+  if(this.hasOwnProperty('animation')){
+    this.animation.clearQueue();
+    this.animation.stop();
+
+    delete this.animation;
+  }
+
+  this.animation = $({perc:0});
+  this.animation.animate({perc: 1}, {
+    duration: duration,
     easing: scope.easing,
     step: function(e) {
       _transform(this.perc);
@@ -59,10 +83,11 @@ TheMask.prototype.shapeMask = function(maskID) {
       // when the animation has finished, you may overwrite
       // the currentmask to the destination state.
       scope.set('currentMask', toMask);
+      // console.log('anime complete');
 
-      // if(callback){
-      //   callback();
-      // }
+      if(opt.hasOwnProperty('callback')){
+        opt.callback();
+      }
     }
   });
 }

@@ -15,9 +15,8 @@ TheMask.prototype.analyzer = function() {
   }
 
   var isMarkupDefined = function() {
-    if(scope.$el.find('.image').length &&
+    if((scope.$el.find('.image').length || scope.$el.find('.solid').length) &&
       scope.$el.find('.mask').length) {
-
       return true;
     } else {
 
@@ -44,11 +43,12 @@ TheMask.prototype.analyzer = function() {
     var success = true;
 
     // Collect image & masks.
-    var $image = $(scope.$el.find('.image')[0]);
+    var $image = scope.$el.find('.image');
+    var $solid = scope.$el.find('.solid');
     var $masks = scope.$el.find('.mask');
 
     // Stash Image.
-    if($image){
+    if($image.length){
       var imageDimensions = $image.data('dimensions').split(',');
       var imageSrc = $image.data('src');
 
@@ -69,9 +69,46 @@ TheMask.prototype.analyzer = function() {
         scope.warn('Problems with image src or dimensions!');
         success = false;
       }
-    } else {
-      scope.warn('Problems with provided image!');
+    }
+    // } else {
+    //   scope.warn('Problems with provided image!');
+    //   success = false;
+    // }
+
+    if(success && $solid.length){
+      var solidDimensions = $solid.data('dimensions').split(',');
+      var solidFill = $solid.data('fill');
+      var solidStroke = $solid.data('stroke');
+      var solidStrokeWidth = $solid.data('strokeWidth');
+
+      if(solidDimensions.length==2){
+        var parsedDims = {
+          width: Number(solidDimensions[0]),
+          height: Number(solidDimensions[1])
+        }
+
+        // Setup image.
+        scope.set("solid", {
+          fill: solidFill,
+          stroke: solidStroke,
+          strokeWidth: solidStrokeWidth,
+          dimensions: parsedDims
+        });
+
+        success = true;
+      } else {
+        scope.warn('Problems with solid dimensions!');
+        success = false;
+      }
+    }
+    // } else {
+    //   scope.warn('Problems with provided solid!');
+    //   success = false;
+    // }
+
+    if(!$image.length && !$solid.length){
       success = false;
+      scope.warn('Image AND solid are missing!');
     }
 
     // Stash masks.

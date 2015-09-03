@@ -4,58 +4,104 @@
     <title>TheMask demo</title>
     <link rel="stylesheet" href="./assets/normalize.css" />
     <link rel="stylesheet" href="./assets/main.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
     <style>
       /* begin demo embedded styles */
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #1e1f23;
+      }
+
       h1, p {
         text-align: center;
+        color: white;
+      }
+
+      a {
+        color: #1a609b;
       }
 
       h1 {
         margin: 1.2em 0;
       }
 
-      #container {
-        position: relative;
+      #container,
+      #container .header,
+      #iphone {
         width: 500px; height: 500px;
+      }
 
-        margin: 0 auto 0 auto;
-        overflow: hidden;
+      #container {
+        position: absolute;
+        top: 200px;
+        left: 50%;
+
+        margin: 0 0 0 -250px;
+        /*margin: 0 auto;*/
+        overflow: visible;
 
         cursor: pointer;
 
-        -webkit-transition: width 0.5s;
-        transition: width 0.5s;
+        -webkit-transition: width 0.5s, top 0.5s, left 0.5s, margin-left 0.5s;
+        transition: width 0.5s, top 0.5s, left 0.5s, margin-left 0.5s;
+
+        -webkit-transform: translateZ(0);
       }
 
       #container.open {
-        width: 100%;
-        /*height: 600px;*/
+        position: fixed;
+        top: 0; left: 0%;
 
-        /*background: url('img/skyline.jpg') center center;*/
-        /*background: black;*/
+        width: 100%;
+        height: 100%;
+
+        margin-left: 0;
+
+        overflow-x: hidden;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: none;
+
+        /*background: #1e1f21;*/
+      }
+
+      #container .header {
+        position: relative;
+        width: 100%;
       }
 
       #iphone {
         position: absolute;
-        top: 50%; left: 50%;
+        top: 0px; left: 50%;
 
-        width: 500px; height: 500px;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
 
-        -webkit-transform: translateX(-50%) translateY(-50%);
-        -ms-transform: translateX(-50%) translateY(-50%);
-        transform: translateX(-50%) translateY(-50%);
+        -webkit-transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
+        transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
+      }
 
-        -webkit-transition: width 0.75s, height 0.75s;
-        transition: width 0.75s, height 0.75s;
+      #iphone svg {
+        -webkit-transition: width 0.5s, height 0.5s;
+        transition: width 0.5s, height 0.5s;
       }
 
       #container.open #iphone {
-        width: 400px; height: 400px;
+        width: 540px; height: 540px;
+        top: 40px;
       }
 
       #skyline {
         width: 100%;
         height: 100%;
+
+        overflow: hidden;
       }
 
       #skyline svg {
@@ -76,15 +122,21 @@
 
         background: transparent;
 
-        -webkit-transition: background 0.3s;
-        transition: background 0.3s;
+        -webkit-transition: opacity 0.6s;
+        transition: opacity 0.6s;
+
+        opacity: 0;
       }
 
       #container.open .background {
-        background: #1e1f23;
+        background: #202123;
+        -webkit-transition: opacity 0.6s;
+        transition: opacity 0.6s;
 
-        -webkit-transition: background 1.5s;
-        transition: background 1.5s;
+        -webkit-transition-delay: 0.35s;
+        transition-delay: 0.35s;
+
+        opacity: 1;
       }
 
       .rel-center {
@@ -109,23 +161,29 @@
     <!-- begin demo markup -->
 
     <div id="container">
-      <div class="background"></div>
+      <div class="header">
+        <div class="background"></div>
 
-      <div id="skyline">
-        <span class="image" data-dimensions="1920,500" data-src="img/skyline.jpg"></span>
-        <span class="mask" data-coords="1020,20 1188,282 1043,446 730,345" data-mask-id="closedMask"></span>
-        <span class="mask" data-coords="0,0 1920,0 1920,500 0,500" data-mask-id="openMask"></span>
-        <div  class="alternative">
-          <p>Sorry, your browser does not support 'The Mask.'</p>
+        <div id="skyline">
+          <span class="image" data-dimensions="1920,500" data-src="img/skyline.png"></span>
+          <span class="mask" data-coords="1020,313 1188,313 1043,313 730,313" data-mask-id="initMask"></span>
+          <span class="mask" data-coords="1020,20 1188,282 1043,446 730,345" data-mask-id="closedMask"></span>
+          <span class="mask" data-coords="1020,20 1188,302 1003,446 730,375" data-mask-id="middleMask"></span>
+          <span class="mask" data-coords="0,0 1920,0 1920,500 0,500" data-mask-id="openMask"></span>
+          <div  class="alternative">
+            <p>Sorry, your browser does not support 'The Mask.'</p>
+          </div>
         </div>
-      </div>
 
-      <div id="iphone">
-        <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
-        <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
-        <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
-        <div  class="alternative rel-center">
-          <p>Sorry, your browser does not support 'The Mask.'</p>
+        <div id="iphone">
+          <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+          <span class="mask" data-coords="38,0 958,0 958,626 666,626 38,626" data-mask-id="initMask"></span>
+          <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
+          <span class="mask" data-coords="38,0 998,0 958,604 586,894 38,750" data-mask-id="middleMask"></span>
+          <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
+          <div  class="alternative rel-center">
+            <p>Sorry, your browser does not support 'The Mask.'</p>
+          </div>
         </div>
       </div>
     </div>
@@ -145,6 +203,13 @@
 
     <script>
       /* begin demo script */
+      // $('html').mousemove(function(e) {
+      //   var relX = ((e.pageX/window.innerWidth)-0.5)*2;
+
+      //   $('#iphone svg image').attr('x', relX*20);
+      //   // $('#iphone svg image').attr('y', (relX+1)*10);
+      // });
+
 
       var maskSkyline = new TheMask({
         target: '#skyline',
@@ -156,20 +221,33 @@
         duration: 500
       });
 
+      maskSkyline.onLoad = function(e){
+        console.log('maskSkyline image was loaded!');
+        maskSkyline.shapeMask({id:'closedMask'});
+      }
+
+      maskIphone.onLoad = function(e){
+        console.log('maskIphone image was loaded!');
+        maskIphone.shapeMask({id:'closedMask'});
+      }
+
+
       $('#container').on('click', function(event) {
         event.preventDefault();
 
         var cm = maskSkyline.get('currentMask');
+        var doc = $(this);
 
         if(cm) {
           if(cm.id=="closedMask"){
-            maskSkyline.shapeMask('openMask');
-            maskIphone.shapeMask('openMask');
+            maskSkyline.shapeMask({id:'openMask'});
+            maskIphone.shapeMask({id:'openMask'});
 
-            $(this).addClass('open');
+            doc.addClass('open');
+
           } else if(cm.id=="openMask"){
-            maskSkyline.shapeMask('closedMask');
-            maskIphone.shapeMask('closedMask');
+            maskSkyline.shapeMask({id:'closedMask'});
+            maskIphone.shapeMask({id:'closedMask'});
 
             $(this).removeClass('open');
           }

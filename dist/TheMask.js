@@ -12,12 +12,12 @@ var TheMask = function(opt) {
   var analyzed = this.analyzer();
   var build = this.build();
 
-  this.info("build : " + build);
+  // this.info("build : " + build);
 };
 
 
 // Version.
-TheMask.VERSION = '0.0.1';
+TheMask.VERSION = '0.1.0';
 
 
 // Export to the root, which is probably `window`.
@@ -54,6 +54,7 @@ TheMask.prototype.processOptions = function(opt) {
 
   //Setup data object
   this.data.image = null;
+  this.data.solid = null;
   this.data.masks = null;
   this.data.alternative = null;
   this.data.targetID = null;
@@ -137,9 +138,8 @@ TheMask.prototype.analyzer = function() {
   }
 
   var isMarkupDefined = function() {
-    if(scope.$el.find('.image').length &&
+    if((scope.$el.find('.image').length || scope.$el.find('.solid').length) &&
       scope.$el.find('.mask').length) {
-
       return true;
     } else {
 
@@ -166,11 +166,12 @@ TheMask.prototype.analyzer = function() {
     var success = true;
 
     // Collect image & masks.
-    var $image = $(scope.$el.find('.image')[0]);
+    var $image = scope.$el.find('.image');
+    var $solid = scope.$el.find('.solid');
     var $masks = scope.$el.find('.mask');
 
     // Stash Image.
-    if($image){
+    if($image.length){
       var imageDimensions = $image.data('dimensions').split(',');
       var imageSrc = $image.data('src');
 
@@ -191,9 +192,46 @@ TheMask.prototype.analyzer = function() {
         scope.warn('Problems with image src or dimensions!');
         success = false;
       }
-    } else {
-      scope.warn('Problems with provided image!');
+    }
+    // } else {
+    //   scope.warn('Problems with provided image!');
+    //   success = false;
+    // }
+
+    if(success && $solid.length){
+      var solidDimensions = $solid.data('dimensions').split(',');
+      var solidFill = $solid.data('fill');
+      var solidStroke = $solid.data('stroke');
+      var solidStrokeWidth = $solid.data('strokeWidth');
+
+      if(solidDimensions.length==2){
+        var parsedDims = {
+          width: Number(solidDimensions[0]),
+          height: Number(solidDimensions[1])
+        }
+
+        // Setup image.
+        scope.set("solid", {
+          fill: solidFill,
+          stroke: solidStroke,
+          strokeWidth: solidStrokeWidth,
+          dimensions: parsedDims
+        });
+
+        success = true;
+      } else {
+        scope.warn('Problems with solid dimensions!');
+        success = false;
+      }
+    }
+    // } else {
+    //   scope.warn('Problems with provided solid!');
+    //   success = false;
+    // }
+
+    if(!$image.length && !$solid.length){
       success = false;
+      scope.warn('Image AND solid are missing!');
     }
 
     // Stash masks.
@@ -247,7 +285,13 @@ TheMask.prototype.build = function() {
 
   var build_SVG = function(){
     var svg = document.createElement('svg');
-    var dims = scope.data.image.dimensions;
+    var dims;
+
+    if(scope.get('image')){
+      dims = scope.get('image').dimensions;
+    } else if(scope.get('solid')){
+      dims = scope.get('solid').dimensions;
+    }
 
     // Compute viewbox;
     var vbx = '0 0 ' + dims.width + ' ' + dims.height;
@@ -258,73 +302,154 @@ TheMask.prototype.build = function() {
     svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
     svg.setAttribute('xmlns:xlink','http://www.w3.org/1999/xlink');
     svg.setAttribute('viewBox', vbx);
-    svg.setAttribute('preserveAspectRatio', 'xMinYMin slice');
+    // svg.setAttribute('preserveAspectRatio', 'xMinYMin slice');
+
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    // svg.setAttribute('width', dims.width);
+    // svg.setAttribute('height', dims.height);
 
     return svg;
   };
 
-  var build_ClipPath = function(){
-    // Compute polygon ID
-    var pID = scope.get('targetID') + 'Masker';
+  var build_Defs = function(){
+    // Create Defenitions group
+    var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 
-    // Create clipPath
-    var cp = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-    cp.setAttributeNS(null, 'id', pID);
-
-    return cp;
+    return defs;
   }
 
-  var build_Polygon = function(){
+  var build_Polygon = function(mask){
+    // Compute polygon ID
+    var id = scope.get('targetID') + 'Polygon';
+
     // Compute init points
-    var mask = scope.get('currentMask');
     var points = mask.coords;
 
     // Create polygon
     var p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    p.setAttributeNS(null, 'id', id);
     p.setAttributeNS(null, 'points', points);
 
     return p;
   }
 
-  var build_Image = function(){
-    var specs = scope.data.image;
+  var build_ClipPath = function(){
+    // Compute clipPath ID
+    var cID = scope.get('targetID') + 'Masker';
+
+    // Create clipPath
+    var cp = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+    cp.setAttributeNS(null, 'id', cID);
+
+    return cp;
+  }
+
+  var build__ClipPath_Use = function(){
+    // Compute polygon ID
+    var pIDHash = '#' + scope.get('targetID') + 'Polygon';
+
+    // Create use
+    var u = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    u.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', pIDHash);
+
+    return u;
+  }
+
+  var build_Solid = function(specs){
     var dims = specs.dimensions;
 
     // Compute polygon ID
-    var pIDHash = '#' + scope.get('targetID') + 'Masker';
+    var pIDHash = '#' + scope.get('targetID') + 'Polygon';
+
+    // Create image
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    s.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', pIDHash);
+    s.setAttributeNS(null, 'x', 0);
+    s.setAttributeNS(null, 'y', 0);
+
+    if(specs.hasOwnProperty('fill')) {
+      s.setAttributeNS(null, 'fill', specs.fill);
+    }
+
+    if(specs.hasOwnProperty('stroke')) {
+      s.setAttributeNS(null, 'stroke', specs.stroke);
+    }
+
+    if(specs.hasOwnProperty('strokeWidth')) {
+      s.setAttributeNS(null, 'stroke-width', specs.strokeWidth);
+    }
+
+    return s;
+  };
+
+  var build_Image = function(specs){
+    var dims = specs.dimensions;
+
+    // Compute polygon ID
+    var cIDHash = '#' + scope.get('targetID') + 'Masker';
 
     // Compute polygon clip-path style
-    var cpStyle = 'clip-path:url(' + pIDHash + ')';
+    var cStyle = 'clip-path:url(' + cIDHash + ')';
 
     // Create image
     var img = document.createElementNS("http://www.w3.org/2000/svg", "image");
+
     img.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', specs.src);
     img.setAttributeNS(null, 'width', dims.width);
     img.setAttributeNS(null, 'height', dims.height);
 
-    img.onload = function(){
-      scope.log('Loaded: xlink:href: ' + specs.src);
-    }
-
     // Apply masking
-    img.setAttributeNS(null, 'style', cpStyle);
+    img.setAttributeNS(null, 'style', cStyle);
+
+    watchImgLoad(specs.src);
 
     return img;
   };
 
+  function watchImgLoad(reference) {
+    var img = new Image();
+    img.onload = function(event){
+      if(scope.onLoad !== undefined){
+        scope.onLoad(event);
+      }
+    }
+
+    img.src = reference;
+  }
+
   // Clean old markup.
   this.$el.html('');
 
+  // Set values.
+  var mask = scope.get('currentMask');
+  var image = this.get('image');
+  var solid = this.get('solid');
+
   // Build different elements.
   this.defs.$svg = $(build_SVG());
+  this.defs.$defs = $(build_Defs());
+  this.defs.$p = $(build_Polygon(mask));
   this.defs.$cp = $(build_ClipPath());
-  this.defs.$p = $(build_Polygon());
-  this.defs.$img = $(build_Image());
+  this.defs.$u = $(build__ClipPath_Use());
+
+  // Specify defenitions.
+  this.defs.$defs.append(this.defs.$p);
+  this.defs.$cp.append(this.defs.$u);
 
   // Concatinate elements.
-  this.defs.$cp.append(this.defs.$p);
+  this.defs.$svg.append(this.defs.$defs);
   this.defs.$svg.append(this.defs.$cp);
-  this.defs.$svg.append(this.defs.$img);
+
+
+  if(this.get('solid')){
+    this.defs.$solid = $(build_Solid(solid));
+    this.defs.$svg.append(this.defs.$solid);
+  }
+
+  if(this.get('image')){
+    this.defs.$img = $(build_Image(image));
+    this.defs.$svg.append(this.defs.$img);
+  }
 
   // Add master element
   this.$el.append(this.defs.$svg);
@@ -335,11 +460,27 @@ TheMask.prototype.build = function() {
 
 /* build.js */
 
-TheMask.prototype.shapeMask = function(maskID) {
+TheMask.prototype.shapeMask = function(opt) {
   var scope = this;
+
+  if(!opt) {
+    return;
+  }
+
+  var maskID = opt.id;
+  var duration = opt.duration || this.duration;
 
   var currentMask = this.get('currentMask');
   var toMask = this.findMask(maskID);
+
+  if(currentMask.id==toMask.id) {
+    // console.log('anime ignored, allready on mask-id: ' + currentMask.id);
+    return false;
+  }
+
+  // Solve issue when starting in the middle of an other animation.
+  scope.set('currentMask', undefined);
+  currentMask = this.get('currentMask');
 
   if(!toMask){
     return false;
@@ -382,8 +523,16 @@ TheMask.prototype.shapeMask = function(maskID) {
     $polygon.attr('points', newPointsString);
   }
 
-  $({perc:0}).animate({perc: 1}, {
-    duration: scope.duration,
+  if(this.hasOwnProperty('animation')){
+    this.animation.clearQueue();
+    this.animation.stop();
+
+    delete this.animation;
+  }
+
+  this.animation = $({perc:0});
+  this.animation.animate({perc: 1}, {
+    duration: duration,
     easing: scope.easing,
     step: function(e) {
       _transform(this.perc);
@@ -394,16 +543,17 @@ TheMask.prototype.shapeMask = function(maskID) {
       // when the animation has finished, you may overwrite
       // the currentmask to the destination state.
       scope.set('currentMask', toMask);
+      // console.log('anime complete');
 
-      // if(callback){
-      //   callback();
-      // }
+      if(opt.hasOwnProperty('callback')){
+        opt.callback();
+      }
     }
   });
 }
 
 
-/* analyzer.js */
+/* getters-setters.js */
 
 TheMask.prototype.get = function(namespace) {
   if(this.routedGetters.hasOwnProperty(namespace)){
@@ -451,11 +601,22 @@ TheMask.prototype.add = function(namespace, value) {
 
 TheMask.prototype.routedGetters= {
   currentMask: function() {
-    if(!this.data.hasOwnProperty('currentMask')){
-      var masks = this.data.masks;
+    if(!this.data.currentMask){
 
-      if(masks.length){
-        this.data.currentMask = masks[0];
+      if(this.defs.hasOwnProperty('$p')){
+        var p = this.defs.$p;
+        var points = p.attr('points');
+
+        this.data.currentMask = {
+          id: "undefined",
+          coords: points
+        }
+      } else {
+        var masks = this.data.masks;
+
+        if(masks.length){
+          this.data.currentMask = masks[0];
+        }
       }
     }
 
@@ -500,6 +661,48 @@ TheMask.prototype.findMask = function(maskID){
   };
 
   return found;
+}
+
+TheMask.prototype.resetImage = function(image){
+  var $img = this.defs.$img;
+
+  var orgImage = this.data.image;
+
+  if(image.hasOwnProperty('src')) {
+
+
+    // Tag the old image.
+    var _image = this.$el.find('image');
+    _image.attr('class','TheMask-remove');
+
+    console.log(_image);
+
+    var dims = orgImage.dimensions;
+
+    // Compute polygon ID
+    var pIDHash = '#' + this.get('targetID') + 'Masker';
+
+    // Compute polygon clip-path style
+    var cpStyle = 'clip-path:url(' + pIDHash + ');display:none;';
+
+    // Create image
+    var img = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    img.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', image.src);
+    img.setAttributeNS(null, 'width', dims.width);
+    img.setAttributeNS(null, 'height', dims.height);
+
+    // Apply masking
+    img.setAttributeNS(null, 'style', cpStyle);
+
+
+    var duration = 1000;
+    $(img).fadeIn((duration/2));
+    setTimeout(function(){
+      $(_image).fadeOut((duration/2));
+    },(duration/5));
+
+    this.defs.$svg.append(img);
+  }
 }
 
 

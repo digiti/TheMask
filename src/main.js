@@ -7,12 +7,12 @@ var TheMask = function(opt) {
   var analyzed = this.analyzer();
   var build = this.build();
 
-  this.info("build : " + build);
+  // this.info("build : " + build);
 };
 
 
 // Version.
-TheMask.VERSION = '0.0.1';
+TheMask.VERSION = '0.1.0';
 
 
 // Export to the root, which is probably `window`.

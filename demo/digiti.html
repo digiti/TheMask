@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TheMask demo</title>
+    <link rel="stylesheet" href="./assets/normalize.css" />
+    <link rel="stylesheet" href="./assets/main.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+    <style>
+      /* begin demo embedded styles */
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #1e1f23;
+
+        height: 2000px;
+      }
+
+      body.body-hidden {
+        /*position: absolute;
+        width: 100%; height: 100%;*/
+        overflow:hidden;
+        /*-webkit-overflow-scrolling: none;*/
+      }
+
+      h1, p {
+        text-align: center;
+        color: white;
+      }
+
+      a {
+        color: #1a609b;
+      }
+
+      h1 {
+        margin: 1.2em 0;
+      }
+
+      #container,
+      #container .header,
+      #iphone {
+        /*width: 500px; height: 500px;*/
+        width: 600px; height: 600px;
+      }
+
+      #container,
+      #button {
+        display: none;
+      }
+
+      #button {
+        width: 300px; height: 300px;
+
+        position: absolute;
+        top: 210px;
+        right: 60%;
+
+        cursor: pointer;
+
+        /*background: url('img/icon.png') no-repeat center center;
+        background-size: 57px 50px;*/
+      }
+
+      #container {
+        position: absolute;
+        top: 170px;
+        left: 40%;
+
+        margin: 0 0 0 0;
+        overflow: hidden;
+
+        cursor: pointer;
+
+        -webkit-transition: width 0.5s, height 0.5s, top 0.3s, left 0.5s, margin-left 0.5s;
+        transition: width 0.5s, height 0.5s, top 0.3s, left 0.5s, margin-left 0.5s;
+
+        -webkit-transform: translateZ(0);
+      }
+
+      #container.moved {
+        margin-left: -300px;
+        left: 50%;
+      }
+
+      @media screen and (max-device-width: 640px) {
+        #container,
+        #container .header,
+        #iphone {
+          left: auto;
+          width: 300px; height: 300px;
+        }
+
+        #button {
+          top: 170px;
+          left: 50%;
+          right:
+          margin-left: -150px;
+        }
+
+        #container.moved {
+          margin-left: -150px;
+        }
+      }
+
+      #container.open {
+        position: absolute;
+        /*position: fixed;*/
+        top: 0; left: 0%;
+        z-index: 999;
+
+        width: 100%;
+        height: 100%;
+
+        margin-left: 0;
+
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        -webkit-overflow-scrolling: touch;
+
+        background: #1e1f21;
+      }
+
+      #container.open.ready {
+        position: fixed;
+        top: 0 !important; left: 0;
+
+        -webkit-transition: none;
+        transition: none;
+      }
+
+      #container.open.page-hack {
+        /*overflow-x: hidden;
+        overflow-y: scroll;  has to be scroll, not auto
+        -webkit-overflow-scrolling: touch;*/
+      }
+
+      #container .header {
+        position: relative;
+        width: 100%;
+      }
+
+      #container.open .header {
+        position: relative;
+        -webkit-transform: translate3d(0,0,0);
+
+        /*display: none;*/
+
+        height: 700px;
+      }
+
+      #container .content {
+        /*display: none;*/
+
+        width: 100%;
+        max-width: 800px;
+        margin: 50vh auto 40px auto;
+
+        -webkit-transform: translateZ(0);
+
+        -webkit-transition: margin-top 1s;
+        transition: margin-top 1s;
+      }
+
+      #container .content p {
+        font-size: 1.2em;
+        line-height: 1.7em;
+
+        margin-bottom: 50px;
+      }
+
+      #container.open .content {
+        display: block;
+
+        margin-top:80px;
+      }
+
+      #iphone {
+        position: absolute;
+        top: 0px; left: 50%;
+
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+
+        -webkit-transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
+        transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
+      }
+
+      #iphone svg {
+        /*width: 600px; height: 600px;*/
+
+        -webkit-transition: width 0.5s, height 0.5s;
+        transition: width 0.5s, height 0.5s;
+      }
+
+      #container.open #iphone {
+        top: 40px;
+        /*left: 75%;*/
+
+        /*width: 500px; height: 500px;*/
+        /*margin-left: 250px;*/
+      }
+
+      #container.open #iphone svg {
+        /*width: 500px; height: 500px;*/
+      }
+
+      #skyline {
+        width: 100%;
+        height: 100%;
+
+        overflow: hidden;
+      }
+
+      #skyline svg {
+        height: 100%;
+
+        position: relative;
+        left: 50%;
+
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+
+      #container .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        background: transparent;
+
+        -webkit-transition: opacity 0.6s;
+        transition: opacity 0.6s;
+
+        opacity: 0;
+      }
+
+      #container.open .background {
+        /*background: #1e1f23;*/
+        background: #202123;
+        /*background: url('img/skyline.png') center center;
+        background-size: auto 100%;*/
+
+        -webkit-transition: opacity 0.6s;
+        transition: opacity 0.6s;
+
+        -webkit-transition-delay: 0.35s;
+        transition-delay: 0.35s;
+
+        opacity: 1;
+      }
+
+      .rel-center {
+        position: relative;
+        top: 50%; left: 50%;
+
+        -webkit-transform: translateX(-50%) translatey(-50%);
+        -ms-transform: translateX(-50%) translatey(-50%);
+        transform: translateX(-50%) translatey(-50%);
+      }
+
+      .alternative {
+        display: none;
+      }
+
+      #shape {
+        position: relative;
+        z-index: 100;
+        top: 200px;
+      }
+
+      #shape svg {
+        display: block;
+      }
+
+      #shape .page {
+        background: white;
+        width: 100%;
+        height: 1000px;
+      }
+
+      /* end demo embedded styles */
+    </style>
+  </head>
+  <body>
+    <h1>TheMask demo</h1>
+
+    <!-- begin demo markup -->
+
+    <div id="button">
+      <!-- 1c242f -->
+      <span class="image" data-dimensions="300,300" data-src="img/icon.png"></span>
+      <span class="solid" data-dimensions="300,300" data-fill="transparent" data-stroke="#3b3e47" data-stroke-width="2"></span>
+
+      <span class="mask" data-coords="20,150 280,150 280,150 20,150" data-mask-id="initMask"></span>
+      <span class="mask" data-coords="2,2 298,100 230,230 60,250" data-mask-id="closedMask"></span>
+      <span class="mask" data-coords="20,20 280,20 280,280 20,280" data-mask-id="openMask"></span>
+      <div  class="alternative rel-center">
+        <p>Sorry, your browser does not support 'The Mask.'</p>
+      </div>
+    </div>
+
+    <div id="testWrapper">
+      <div id="container">
+        <div class="header">
+          <div class="background"></div>
+
+          <div id="skyline">
+            <span class="image" data-dimensions="1920,500" data-src="img/skyline.png"></span>
+            <span class="solid" data-dimensions="1920,500" data-fill="transparent" data-stroke="#1c242f" data-stroke-width="6"></span>
+
+            <span class="mask" data-coords="1020,313 1188,313 1043,313 730,313" data-mask-id="initMask"></span>
+            <span class="mask" data-coords="1020,20 1188,282 1043,446 730,345" data-mask-id="closedMask"></span>
+            <span class="mask" data-coords="1020,20 1188,302 1003,446 730,375" data-mask-id="middleMask"></span>
+            <span class="mask" data-coords="0,0 1920,0 1920,500 0,500" data-mask-id="openMask"></span>
+            <div  class="alternative">
+              <p>Sorry, your browser does not support 'The Mask.'</p>
+            </div>
+          </div>
+
+          <div id="iphone">
+            <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
+            <span class="mask" data-coords="38,0 958,0 958,626 666,626 38,626" data-mask-id="initMask"></span>
+            <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
+            <span class="mask" data-coords="38,0 998,0 958,604 586,894 38,750" data-mask-id="middleMask"></span>
+            <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
+            <div  class="alternative rel-center">
+              <p>Sorry, your browser does not support 'The Mask.'</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <p>
+              Habeo electram cu duo, affert congue altera vix in, eum eu zril volutpat. Suas iisque quo eu, nibh omnes ut quo. Pri in graeco facilis abhorreant, qui illum feugiat salutandi ut. Assum veritus antiopam mel eu, pro possit signiferumque no.
+          </p>
+          <p>
+              An voluptaria repudiandae nam, sit ei dicta eruditi partiendo. Eros commodo salutandi et his. Eum wisi tacimates an, ridens eripuit voluptaria te ius. At sit falli veritus denique. His ne magna aperiri lucilius, nec an erant neglegentur. Ex vix labores perfecto inciderint, has discere luptatum disputando eu. Qui tractatos reformidans in, autem omnes expetendis vim in.An voluptaria repudiandae nam, sit ei dicta eruditi partiendo. Eros commodo salutandi et his. Eum wisi tacimates an, ridens eripuit voluptaria te ius. At sit falli veritus denique. His ne magna aperiri lucilius, nec an erant neglegentur. Ex vix labores perfecto inciderint, has discere luptatum disputando eu. Qui tractatos reformidans in, autem omnes expetendis vim in.
+          </p>
+          <p>
+              Habeo electram cu duo, affert congue altera vix in, eum eu zril volutpat. Suas iisque quo eu, nibh omnes ut quo. Pri in graeco facilis abhorreant, qui illum feugiat salutandi ut. Assum veritus antiopam mel eu, pro possit signiferumque no.
+          </p>
+          <p>
+              An voluptaria repudiandae nam, sit ei dicta eruditi partiendo. Eros commodo salutandi et his. Eum wisi tacimates an, ridens eripuit voluptaria te ius. At sit falli veritus denique. His ne magna aperiri lucilius, nec an erant neglegentur. Ex vix labores perfecto inciderint, has discere luptatum disputando eu. Qui tractatos reformidans in, autem omnes expetendis vim in.An voluptaria repudiandae nam, sit ei dicta eruditi partiendo. Eros commodo salutandi et his. Eum wisi tacimates an, ridens eripuit voluptaria te ius. At sit falli veritus denique. His ne magna aperiri lucilius, nec an erant neglegentur. Ex vix labores perfecto inciderint, has discere luptatum disputando eu. Qui tractatos reformidans in, autem omnes expetendis vim in.
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- end demo markup -->
+
+    <p>Check out the <a href="https://github.com/digiti/TheMask">project repo</a>.
+    <p>Copyright 2015 Digiti</p>
+
+
+    <!-- dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//cdn.jsdelivr.net/velocity/1.2.2/velocity.min.js"></script>
+
+    <!-- the script -->
+    <script src="./../dist/TheMask.js"></script>
+
+    <script>
+      $.fn.removeStyle = function(style)
+      {
+          var search = new RegExp(style + '[^;]+;?', 'g');
+
+          return this.each(function()
+          {
+              $(this).attr('style', function(i, style)
+              {
+                  return style.replace(search, '');
+              });
+          });
+      };
+
+      /* begin demo script */
+      // $('html').mousemove(function(e) {
+      //   var relX = ((e.pageX/window.innerWidth)-0.5)*2;
+
+      //   $('#iphone svg image').attr('x', relX*20);
+      //   // $('#iphone svg image').attr('y', (relX+1)*10);
+      // });
+
+
+
+      // $.get("_shape.html", function(data){
+      //     $('body').append(data);
+      // });
+
+      // $.get("../../_labs/sliding-cards", function(data){
+      //   console.log($(data));
+      //   $('body .content').append($(data));
+      // });
+
+      // $.ajax({
+      //   url: '../../_labs/sliding-cards',
+      //   dataType: 'html',
+      // })
+      // .done(function(data) {
+      //   console.log("success");
+      //   console.log($(data));
+      //   $('body .content').append($(data));
+      // })
+      // .fail(function() {
+      //   console.log("error");
+      // })
+      // .always(function() {
+      //   console.log("complete");
+      // });
+
+
+
+      var maskSkyline = new TheMask({
+        target: '#skyline',
+        duration: 500
+      });
+
+      var maskIphone = new TheMask({
+        target: '#iphone',
+        duration: 500
+      });
+
+      var maskButton = new TheMask({
+        target: '#button',
+        duration: 500
+      });
+
+
+      $('#iphone svg image').attr('y', 1000);
+      setTimeout(function(){
+        maskSkyline.shapeMask({id:'closedMask', duration: 1000});
+        maskIphone.shapeMask({id:'closedMask', duration: 1000});
+
+        $({y:600}).animate({y: 0},{
+          duration: 1000,
+          step: function(){
+            $('#iphone svg image').attr('y', this.y)
+          }
+        });
+
+        $('#container').fadeIn();
+      }, 500);
+
+      setTimeout(function(){
+        maskButton.$el.fadeIn();
+        maskButton.shapeMask({id:'closedMask', duration: 1000});
+      }, 1000);
+
+      $('#container').on('click', function(event) {
+        event.preventDefault();
+
+        var cm = maskSkyline.get('currentMask');
+        var doc = $(this);
+
+        if(cm) {
+          if(cm.id=="closedMask"){
+
+            doc.addClass('moved');
+            maskSkyline.shapeMask({id:'middleMask'});
+            maskIphone.shapeMask({id:'middleMask'});
+
+            var savedOff = $('body').scrollTop();
+            var rest = (window.innerHeight - doc.height())/2;
+
+            // $({y:savedOff}).animate({y: $('#container').offset().top-rest},{
+            //   duration: 500,
+            //   step: function(){
+            //     $('body').scrollTop(this.y);
+            //   }
+            // });
+
+            setTimeout(function(){
+              maskSkyline.shapeMask({id:'openMask'});
+              maskIphone.shapeMask({id:'openMask'});
+
+              var savedTop = $('body').scrollTop();
+
+              doc.addClass('open');
+              $('body').addClass('body-hidden');
+
+              // $('#container').css('top', savedTop);
+
+
+              setTimeout(function(){
+                // doc.removeStyle('top');
+                doc.addClass('page-hack');
+
+                $('#container').addClass('ready');
+              }, 500);
+            },600);
+          } else if(cm.id=="openMask"){
+            $(this).scrollTop(0);
+
+            $('body').removeClass('body-hidden');
+
+
+            $(this).removeStyle('top');
+
+            $(this).removeClass('open');
+            $(this).removeClass('page-hack');
+            $(this).removeClass('ready');
+
+            maskSkyline.shapeMask({id:'middleMask'});
+            maskIphone.shapeMask({id:'middleMask'});
+
+            setTimeout(function(){
+              maskSkyline.shapeMask({id:'closedMask'});
+              maskIphone.shapeMask({id:'closedMask'});
+
+              doc.removeClass('moved');
+            },600);
+          }
+        }
+      });
+
+      maskButton.$el.hover(function(e){
+        $(this).addClass('hover-on');
+        maskButton.shapeMask({id:'openMask', duration: 600});
+        maskButton.resetImage({src:'img/icon-hover.png'});
+      },
+      function() {
+        $(this).removeClass('hover-on');
+        maskButton.shapeMask({id:'closedMask', duration: 500});
+        maskButton.resetImage({src:'img/icon.png'});
+      } );
+
+      /* end demo script */
+    </script>
+  </body>
+</html>

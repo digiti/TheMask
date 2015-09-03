@@ -1,4 +1,4 @@
-/* analyzer.js */
+/* getters-setters.js */
 
 TheMask.prototype.get = function(namespace) {
   if(this.routedGetters.hasOwnProperty(namespace)){
@@ -46,11 +46,22 @@ TheMask.prototype.add = function(namespace, value) {
 
 TheMask.prototype.routedGetters= {
   currentMask: function() {
-    if(!this.data.hasOwnProperty('currentMask')){
-      var masks = this.data.masks;
+    if(!this.data.currentMask){
 
-      if(masks.length){
-        this.data.currentMask = masks[0];
+      if(this.defs.hasOwnProperty('$p')){
+        var p = this.defs.$p;
+        var points = p.attr('points');
+
+        this.data.currentMask = {
+          id: "undefined",
+          coords: points
+        }
+      } else {
+        var masks = this.data.masks;
+
+        if(masks.length){
+          this.data.currentMask = masks[0];
+        }
       }
     }
 

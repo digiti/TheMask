@@ -28,6 +28,7 @@ TheMask.prototype.processOptions = function(opt) {
 
   //Setup data object
   this.data.image = null;
+  this.data.solid = null;
   this.data.masks = null;
   this.data.alternative = null;
   this.data.targetID = null;
