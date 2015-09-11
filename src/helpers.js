@@ -36,8 +36,6 @@ TheMask.prototype.resetImage = function(image){
   var orgImage = this.data.image;
 
   if(image.hasOwnProperty('src')) {
-
-
     // Tag the old image.
     var _image = this.$el.find('image');
     _image.attr('class','TheMask-remove');
@@ -62,12 +60,23 @@ TheMask.prototype.resetImage = function(image){
     img.setAttributeNS(null, 'style', cpStyle);
 
 
-    var duration = 1000;
-    $(img).fadeIn((duration/2));
-    setTimeout(function(){
-      $(_image).fadeOut((duration/2));
-    },(duration/5));
+    var duration = image.duration || this.duration;
+
 
     this.defs.$svg.append(img);
+
+    $(img).fadeIn((duration));
+    $(_image).fadeOut(duration);
+
+
+    if(image.hasOwnProperty('callback')) {
+      setTimeout(image.callback, duration);
+    }
+
+    if(image.hasOwnProperty('shapeMask')) {
+      this.shapeMask({id:image.shapeMask,duration:duration});
+    }
+  } else {
+    alert('TheMask: "src" attribute on "resetImage" command is missing.');
   }
 }

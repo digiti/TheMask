@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TheMask demo</title>
+    <link rel="stylesheet" href="./assets/normalize.css" />
+    <link rel="stylesheet" href="./assets/main.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+    <style>
+      /* begin demo embedded styles */
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #1e1f23;
+      }
+
+      h1, p {
+        text-align: center;
+        color: white;
+      }
+
+      a {
+        color: #1a609b;
+      }
+
+      h1 {
+        margin: 1.2em 0;
+      }
+
+
+      #picture {
+        width: 600px;
+        height: 600px;
+      }
+
+      /* end demo embedded styles */
+    </style>
+  </head>
+  <body>
+    <h1>TheMask demo</h1>
+
+    <!-- begin demo markup -->
+
+    <div id="picture">
+      <span class="image" data-dimensions="1000,1000" data-src="img/cat.png"></span>
+      <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span> -->
+      <span class="mask" data-coords="38,0 998,0 958,604 586,894 38,750" data-mask-id="middleMask"></span>
+      <!-- <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span> -->
+      <div  class="alternative rel-center">
+        <p>Sorry, your browser does not support 'The Mask.'</p>
+      </div>
+    </div>
+
+    <!-- end demo markup -->
+
+
+    <!-- dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- the script -->
+    <script src="./../dist/TheMask.js"></script>
+
+    <script>
+      var pictureMask = new TheMask({
+        target: '#picture',
+        duration: 500,
+        easing: 'easeInBounce'
+      });
+    </script>
+  </body>
+</html>
