@@ -8,7 +8,7 @@ This library makes it easy to add cross-browser animatable masks to images and s
 
 Using Bower:
 
-    bower install TheMask
+    bower install https://github.com/digiti/TheMask.git --save
 
 Or grab the [source](https://github.com/wautersj/TheMask/dist/TheMask.js) ([minified](https://github.com/wautersj/TheMask/dist/TheMask.min.js)).
 
