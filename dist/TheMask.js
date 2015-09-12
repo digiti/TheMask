@@ -673,8 +673,6 @@ TheMask.prototype.resetImage = function(image){
     var _image = this.$el.find('image');
     _image.attr('class','TheMask-remove');
 
-    console.log(_image);
-
     var dims = orgImage.dimensions;
 
     // Compute polygon ID
@@ -698,13 +696,18 @@ TheMask.prototype.resetImage = function(image){
 
     this.defs.$svg.append(img);
 
-    $(img).fadeIn((duration));
+    $(img).fadeIn(duration);
     $(_image).fadeOut(duration);
 
+    setTimeout(function(){
+      _image.remove();
+      _image = undefined;
 
-    if(image.hasOwnProperty('callback')) {
-      setTimeout(image.callback, duration);
-    }
+      if(image.hasOwnProperty('callback')) {
+        image.callback();
+      }
+    }, duration);
+
 
     if(image.hasOwnProperty('shapeMask')) {
       this.shapeMask({id:image.shapeMask,duration:duration});
