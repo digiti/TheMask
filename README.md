@@ -50,11 +50,20 @@ You can define the solid's fill, stroke color and stroke width.
 
 ## (optional): Image with Stroke
 You'd like a stroke around your image? Fine! Just add both the image and the solid.
-For the fill, we'll just use: transparent
+For the fill, we'll just use: transparent. You might want to double the stroke width here, since SVG always
+centers the stroke on the edge of your shape.
 ```html
   ...
   <span class="image" data-dimensions="1000,1000" data-src="img/asset.png"></span>
   <span class="solid" data-dimensions="1000,1000" data-fill="transparent" data-stroke="#0000FF" data-stroke-width="4">
+  ...
+```
+
+## Step 4: And finally ...
+Only thing left to do is make our markup a Mask-Object, in javascript!
+```javascript
+  ...
+  var myMask = new TheMask({ target: ‘#myMask' });
   ...
 ```
 
