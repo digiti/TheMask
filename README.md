@@ -61,9 +61,10 @@ centers the stroke on the edge of your shape.
 
 ## Step 4: And finally ...
 Only thing left to do is make our markup a Mask-Object, in javascript!
+From this point, you are all set! We can nog call commands to morph to another mask or change our asset.
 ```javascript
   ...
-  var myMask = new TheMask({ target: ‘#myMask' });
+  var myMask = new TheMask({ target: '#myMask' });
   ...
 ```
 
