@@ -9,6 +9,7 @@ TheMask.prototype.shapeMask = function(opt) {
 
   var maskID = opt.id;
   var duration = opt.duration || this.duration;
+  var easing = opt.easing || this.easing;
 
   var currentMask = this.get('currentMask');
   var toMask = this.findMask(maskID);
@@ -73,7 +74,7 @@ TheMask.prototype.shapeMask = function(opt) {
   this.animation = $({perc:0});
   this.animation.animate({perc: 1}, {
     duration: duration,
-    easing: scope.easing,
+    easing: easing,
     step: function(e) {
       _transform(this.perc);
     },

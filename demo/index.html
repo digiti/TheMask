@@ -22,130 +22,42 @@
         color: white;
       }
 
-      a {
-        color: #1a609b;
-      }
-
       h1 {
         margin: 1.2em 0;
       }
 
-      #container,
-      #container .header,
-      #iphone {
+      p {
+        line-height: 2em;
+      }
+
+      a {
+        color: #c82d83;
+        outline: 0;
+      }
+
+      a.active {
+        color: white;
+        text-decoration: none;
+        outline: 0;
+      }
+
+      ul {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      ul li {
+        display: inline;
+        margin: 0 10px;
+      }
+
+      #myShape {
+        margin: 100px auto;
         width: 500px; height: 500px;
       }
 
-      #container {
-        position: absolute;
-        top: 200px;
-        left: 50%;
-
-        margin: 0 0 0 -250px;
-        /*margin: 0 auto;*/
-        overflow: visible;
-
-        cursor: pointer;
-
-        -webkit-transition: width 0.5s, top 0.5s, left 0.5s, margin-left 0.5s;
-        transition: width 0.5s, top 0.5s, left 0.5s, margin-left 0.5s;
-
-        -webkit-transform: translateZ(0);
-      }
-
-      #container.open {
-        position: fixed;
-        top: 0; left: 0%;
-
-        width: 100%;
-        height: 100%;
-
-        margin-left: 0;
-
-        overflow-x: hidden;
-        overflow-y: hidden;
-
-        -webkit-overflow-scrolling: none;
-
-        /*background: #1e1f21;*/
-      }
-
-      #container .header {
-        position: relative;
-        width: 100%;
-      }
-
-      #iphone {
-        position: absolute;
-        top: 0px; left: 50%;
-
-        -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        transform: translateX(-50%);
-
-        -webkit-transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
-        transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
-      }
-
-      #iphone svg {
-        -webkit-transition: width 0.5s, height 0.5s;
-        transition: width 0.5s, height 0.5s;
-      }
-
-      #container.open #iphone {
-        width: 540px; height: 540px;
-        top: 40px;
-      }
-
-      #skyline {
-        width: 100%;
-        height: 100%;
-
-        overflow: hidden;
-      }
-
-      #skyline svg {
-        height: 100%;
-
-        position: relative;
-        left: 50%;
-
-        -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        transform: translateX(-50%);
-      }
-
-      #container .background {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-
-        background: transparent;
-
-        -webkit-transition: opacity 0.6s;
-        transition: opacity 0.6s;
-
-        opacity: 0;
-      }
-
-      #container.open .background {
-        background: #202123;
-        -webkit-transition: opacity 0.6s;
-        transition: opacity 0.6s;
-
-        -webkit-transition-delay: 0.35s;
-        transition-delay: 0.35s;
-
-        opacity: 1;
-      }
-
-      .rel-center {
-        position: relative;
-        top: 50%; left: 50%;
-
-        -webkit-transform: translateX(-50%) translatey(-50%);
-        -ms-transform: translateX(-50%) translatey(-50%);
-        transform: translateX(-50%) translatey(-50%);
+      #handles {
+        margin-bottom: 100px;
       }
 
       .alternative {
@@ -156,41 +68,42 @@
     </style>
   </head>
   <body>
-    <h1>TheMask demo</h1>
+    <h1>TheMask.js</h1>
+
 
     <!-- begin demo markup -->
+    <div id="myShape">
+      <span class="image" data-dimensions="1000,1000" data-src="img/asset.png"></span>
+      <span class="solid" data-dimensions="1000,1000" data-fill="transparent" data-stroke="#c82d83" data-stroke-width="10"></span>
 
-    <div id="container">
-      <div class="header">
-        <div class="background"></div>
+      <span class="mask" data-coords="20.4,500 979.6,500.3 870.2,500.9 252.7,500" data-mask-id="myMask-closed"></span>
+      <span class="mask" data-coords="20.4,15 979.6,268.3 870.2,780.9 252.7,980.2" data-mask-id="myMask-1"></span>
+      <span class="mask" data-coords="20.4,195.2 979.6,80.7 882.7,882.1 205.9,730" data-mask-id="myMask-2"></span>
+      <span class="mask" data-coords="395,13 626.9,13 792.1,989 208.1,989" data-mask-id="myMask-3"></span>
 
-        <div id="skyline">
-          <span class="image" data-dimensions="1920,500" data-src="img/skyline.png"></span>
-          <span class="mask" data-coords="1020,313 1188,313 1043,313 730,313" data-mask-id="initMask"></span>
-          <span class="mask" data-coords="1020,20 1188,282 1043,446 730,345" data-mask-id="closedMask"></span>
-          <span class="mask" data-coords="1020,20 1188,302 1003,446 730,375" data-mask-id="middleMask"></span>
-          <span class="mask" data-coords="0,0 1920,0 1920,500 0,500" data-mask-id="openMask"></span>
-          <div  class="alternative">
-            <p>Sorry, your browser does not support 'The Mask.'</p>
-          </div>
-        </div>
-
-        <div id="iphone">
-          <span class="image" data-dimensions="1000,1000" data-src="img/iphone.png"></span>
-          <span class="mask" data-coords="38,0 958,0 958,626 666,626 38,626" data-mask-id="initMask"></span>
-          <span class="mask" data-coords="38,0 958,0 958,564 666,894 38,690" data-mask-id="closedMask"></span>
-          <span class="mask" data-coords="38,0 998,0 958,604 586,894 38,750" data-mask-id="middleMask"></span>
-          <span class="mask" data-coords="0,0 1000,0 1000,0 1000,1000 0,1000" data-mask-id="openMask"></span>
-          <div  class="alternative rel-center">
-            <p>Sorry, your browser does not support 'The Mask.'</p>
-          </div>
-        </div>
+      <div  class="alternative">
+        <p>Sorry, your browser does not support 'The Mask.'</p>
       </div>
     </div>
-
     <!-- end demo markup -->
 
-    <p>Check out the <a href="https://github.com/digiti/TheMask">project repo</a>.
+    <!-- begin demo handles -->
+    <div id="handles">
+      <ul>
+        <li><a href="#" class="js-change-mask active" data-shape-id="myMask-1">MyMask-1</a></li>
+        <li><a href="#" class="js-change-mask" data-shape-id="myMask-2">MyMask-2</a></li>
+        <li><a href="#" class="js-change-mask" data-shape-id="myMask-3">MyMask-3</a></li>
+      </ul>
+
+      <ul>
+        <li><a href="#" class="js-change-asset active" data-asset-url="img/asset.png">Asset 1</a></li>
+        <li><a href="#" class="js-change-asset" data-asset-url="img/asset-2.png">Asset 2</a></li>
+        <li><a href="#" class="js-change-asset" data-asset-url="img/asset-3.png">Asset 3</a></li>
+      </ul>
+    </div>
+    <!-- end demo handles -->
+
+    <p>Check out the project <a href="https://github.com/digiti/TheMask">repository.</a>
     <p>Copyright 2015 Digiti</p>
 
 
@@ -202,56 +115,46 @@
     <script src="./../dist/TheMask.js"></script>
 
     <script>
-      /* begin demo script */
-      // $('html').mousemove(function(e) {
-      //   var relX = ((e.pageX/window.innerWidth)-0.5)*2;
 
-      //   $('#iphone svg image').attr('x', relX*20);
-      //   // $('#iphone svg image').attr('y', (relX+1)*10);
-      // });
-
-
-      var maskSkyline = new TheMask({
-        target: '#skyline',
-        duration: 500
+      var myShape = new TheMask({
+        target: '#myShape',
+        duration: 750,
+        easing: 'easeOutQuart'
       });
 
-      var maskIphone = new TheMask({
-        target: '#iphone',
-        duration: 500
-      });
 
-      maskSkyline.onLoad = function(e){
-        console.log('maskSkyline image was loaded!');
-        maskSkyline.shapeMask({id:'closedMask'});
-      }
+      // Wait for the initial asset to load
+      myShape.onLoad = function(e){
+        console.log('Initial asset was loaded!');
 
-      maskIphone.onLoad = function(e){
-        console.log('maskIphone image was loaded!');
-        maskIphone.shapeMask({id:'closedMask'});
+        // Morph from myMask-closed to myMask-1
+        myShape.shapeMask({id: 'myMask-1', easing: 'easeInOutQuart'});
       }
 
 
-      $('#container').on('click', function(event) {
+      // Click handler to change mask
+      $('.js-change-mask').on('click', function(event) {
         event.preventDefault();
 
-        var cm = maskSkyline.get('currentMask');
-        var doc = $(this);
+        var toMask = $(this).data('shape-id');
+        myShape.shapeMask({id: toMask});
 
-        if(cm) {
-          if(cm.id=="closedMask"){
-            maskSkyline.shapeMask({id:'openMask'});
-            maskIphone.shapeMask({id:'openMask'});
+        // change active state
+        $('.js-change-mask').removeClass('active');
+        $(this).addClass('active');
+      });
 
-            doc.addClass('open');
 
-          } else if(cm.id=="openMask"){
-            maskSkyline.shapeMask({id:'closedMask'});
-            maskIphone.shapeMask({id:'closedMask'});
+      // Click handler to change mask
+      $('.js-change-asset').on('click', function(event) {
+        event.preventDefault();
 
-            $(this).removeClass('open');
-          }
-        }
+        var toAsset = $(this).data('asset-url');
+        myShape.resetImage({src: toAsset});
+
+        // change active state
+        $('.js-change-asset').removeClass('active');
+        $(this).addClass('active');
       });
 
       /* end demo script */
